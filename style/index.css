@@ -4,6 +4,7 @@ body {
     background-color: #2b2b2b;
     color: #fff;
 }
+
 .header {
     background-color: #1c1c1c;
     padding: 10px 20px;
@@ -11,56 +12,95 @@ body {
     align-items: center;
     justify-content: space-between;
 }
+
+.logo a {
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  .logo a:hover {
+    color: white; /* Atau warna lain untuk hover */
+  }
+
 .header img {
     height: 40px;
 }
+
 .header nav a {
     color: #fff;
     margin: 0 10px;
     text-decoration: none;
     font-size: 14px;
 }
+
 .header nav a:hover {
     text-decoration: underline;
 }
+
 .search-bar {
     display: flex;
     align-items: center;
-}
-.search-bar input {
+    background-color: #333;
+    border-radius: 3px;
+    padding: 5px;
+  }
+  
+  .search-bar input {
     padding: 5px;
     border: none;
     border-radius: 3px;
-}
-.search-bar i {
-    margin-left: 5px;
+    flex-grow: 1;
+    background-color: transparent;
     color: #fff;
-}
+  }
+  
+  .search-bar button {
+    background: none;
+    border: none;
+    color: #fff;
+    padding: 5px;
+    cursor: pointer;
+  }
+  
+  .search-bar button i {
+    font-size: 18px;
+  }
+  
+  .search-bar input:focus {
+    outline: none;
+  }
+
 .main-content {
     text-align: center;
     padding: 20px;
 }
+
 .main-content h1 {
     font-size: 28px;
     margin-bottom: 10px;
 }
+
 .main-content p {
     font-size: 16px;
     margin-bottom: 20px;
 }
+
 .main-content a {
     color: #1e90ff;
     text-decoration: none;
 }
+
 .main-content a:hover {
     text-decoration: underline;
 }
+
 .popular-downloads {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
     gap: 20px;
 }
+
 .movie {
     background-color: #3c3c3c;
     border-radius: 5px;
@@ -68,29 +108,27 @@ body {
     width: 200px;
     text-align: center;
 }
+
 .movie img {
     width: 100%;
     border-radius: 5px;
 }
+
 .movie p {
     margin: 10px 0 0;
     font-size: 14px;
+    color: white;
 }
+
 .footer {
     text-align: center;
     padding: 20px;
     background-color: #1c1c1c;
 }
 
-/* Responsive Design for smaller screens */
 @media (max-width: 768px) {
     .popular-downloads {
         flex-direction: column;
         align-items: center;
-    }
-
-    /* Two items per row on smaller screens */
-    .movie {
-        width: 5%; /* Adjust width to 45% to fit two items in a row */
     }
 }
