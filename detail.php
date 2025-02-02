@@ -1,6 +1,6 @@
 <?php
 // Koneksi ke database
-include '../connection.php';
+include './connection.php';
 
 // Mendapatkan ID film dari URL
 $movie_id = isset($_GET['id']) ? $_GET['id'] : null;
@@ -44,7 +44,7 @@ $video_id = basename($parsed_url['path']);
     <title><?php echo htmlspecialchars($movie['title']); ?> - MOVIES APP</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="../style/detail.css">
+    <link rel="stylesheet" href="./style/detail.css">
 </head>
 
 <body>

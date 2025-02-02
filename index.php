@@ -1,6 +1,6 @@
 <?php
 // Menyertakan file koneksi
-include '../connection.php';
+include './connection.php';
 
 // Mendapatkan kata kunci pencarian jika ada
 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
@@ -40,7 +40,7 @@ mysqli_close($conn);
     <title>YTS - HD Movies</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="../style/index.css">
+    <link rel="stylesheet" href="./style/index.css">
 </head>
 
 <body>
@@ -70,7 +70,7 @@ mysqli_close($conn);
                 <?php foreach ($movies as $movie): ?>
                     <div class="movie">
                         <a href="detail.php?id=<?php echo $movie['id']; ?>">
-                            <img alt="<?php echo htmlspecialchars($movie['title']); ?>" height="300" src="../public/image/<?php echo htmlspecialchars($movie['poster_url']); ?>" width="200" />
+                            <img alt="<?php echo htmlspecialchars($movie['title']); ?>" height="300" src="./public/image/<?php echo htmlspecialchars($movie['poster_url']); ?>" width="200" />
                             <p><?php echo htmlspecialchars($movie['title']); ?></p>
                             <p><?php echo htmlspecialchars($movie['year']); ?></p>
                         </a>
