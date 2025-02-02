@@ -1,6 +1,6 @@
 <?php
 // Menyertakan file koneksi
-include 'connection.php';
+include '../connection.php';
 
 // Mendapatkan kata kunci pencarian jika ada
 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
@@ -9,24 +9,26 @@ $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
 $query = "SELECT * FROM movies";
 
 if ($searchTerm) {
-    $query .= " WHERE title ILIKE '%" . pg_escape_string($conn, $searchTerm) . "%'"; // ILIKE untuk pencarian case-insensitive
+    $searchTerm = mysqli_real_escape_string($conn, $searchTerm);
+    $query .= " WHERE title LIKE '%" . $searchTerm . "%'"; // LIKE untuk pencarian case-insensitive di MySQL
 }
 
 $query .= " ORDER BY year DESC";
 
 // Menjalankan query
-$result = pg_query($conn, $query);
+$result = mysqli_query($conn, $query);
 
 if (!$result) {
-    die("Query gagal: " . pg_last_error());
+    die("Query gagal: " . mysqli_error($conn));
 }
 
 $movies = [];
-while ($row = pg_fetch_assoc($result)) {
+while ($row = mysqli_fetch_assoc($result)) {
     $movies[] = $row;
 }
 
-pg_close($conn);
+// Menutup koneksi
+mysqli_close($conn);
 ?>
 
 <!DOCTYPE html>
@@ -38,7 +40,7 @@ pg_close($conn);
     <title>YTS - HD Movies</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="./style/index.css">
+    <link rel="stylesheet" href="../style/index.css">
 </head>
 
 <body>
@@ -68,7 +70,7 @@ pg_close($conn);
                 <?php foreach ($movies as $movie): ?>
                     <div class="movie">
                         <a href="detail.php?id=<?php echo $movie['id']; ?>">
-                            <img alt="<?php echo htmlspecialchars($movie['title']); ?>" height="300" src="./public/image/<?php echo htmlspecialchars($movie['poster_url']); ?>" width="200" />
+                            <img alt="<?php echo htmlspecialchars($movie['title']); ?>" height="300" src="../public/image/<?php echo htmlspecialchars($movie['poster_url']); ?>" width="200" />
                             <p><?php echo htmlspecialchars($movie['title']); ?></p>
                             <p><?php echo htmlspecialchars($movie['year']); ?></p>
                         </a>

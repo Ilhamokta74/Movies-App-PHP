@@ -1,15 +1,17 @@
 <?php
-// Koneksi ke database PostgreSQL
+// Koneksi ke database MySQL
 $host = 'localhost'; // atau alamat host database Anda
-$port = '5432'; // port default PostgreSQL
+$port = '3306'; // port default MySQL
 $dbname = 'movies_db'; // nama database Anda
-$user = 'postgres'; // ganti dengan username database Anda
-$password = 'ilham'; // ganti dengan password database Anda
+$user = 'root'; // ganti dengan username database Anda
+$password = ''; // ganti dengan password database Anda
 
 // Membuat koneksi
-$conn = pg_connect("host=$host port=$port dbname=$dbname user=$user password=$password");
+$conn = mysqli_connect($host, $user, $password, $dbname, $port);
 
 if (!$conn) {
-    die("Koneksi gagal: " . pg_last_error());
+    die("Koneksi gagal: " . mysqli_connect_error());
 }
+
+// echo "Koneksi berhasil!";
 ?>

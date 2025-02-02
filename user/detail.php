@@ -1,6 +1,6 @@
 <?php
 // Koneksi ke database
-include 'connection.php';
+include '../connection.php';
 
 // Mendapatkan ID film dari URL
 $movie_id = isset($_GET['id']) ? $_GET['id'] : null;
@@ -11,18 +11,22 @@ if (!$movie_id) {
     exit;
 }
 
-// Mengambil data film berdasarkan ID
-$query = "SELECT * FROM movies WHERE id = $1";
-$result = pg_query_params($conn, $query, array($movie_id));
+// Mengambil data film berdasarkan ID menggunakan prepared statement
+$query = "SELECT * FROM movies WHERE id = ?";
+$stmt = mysqli_prepare($conn, $query);
+mysqli_stmt_bind_param($stmt, "i", $movie_id); // "i" menandakan integer
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
 
 if (!$result) {
-    die("Query gagal: " . pg_last_error());
+    die("Query gagal: " . mysqli_error($conn));
 }
 
-$movie = pg_fetch_assoc($result);
+$movie = mysqli_fetch_assoc($result);
 
 // Menutup koneksi database
-pg_close($conn);
+mysqli_stmt_close($stmt);
+mysqli_close($conn);
 
 // Mengekstrak video ID dari URL YouTube
 // $video_url = $movie['trailer_url']; // Pastikan kolom 'trailer_url' berisi URL embed YouTube
@@ -40,7 +44,7 @@ $video_id = basename($parsed_url['path']);
     <title><?php echo htmlspecialchars($movie['title']); ?> - MOVIES APP</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="./style/detail.css">
+    <link rel="stylesheet" href="../style/detail.css">
 </head>
 
 <body>
