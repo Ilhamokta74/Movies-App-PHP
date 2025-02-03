@@ -12,7 +12,7 @@ if (!$movie_id) {
 }
 
 // Mengambil data film berdasarkan ID menggunakan prepared statement
-$query = "SELECT * FROM movies WHERE id = ?";
+$query = "SELECT * FROM movies WHERE slug = ?";
 $stmt = mysqli_prepare($conn, $query);
 mysqli_stmt_bind_param($stmt, "i", $movie_id); // "i" menandakan integer
 mysqli_stmt_execute($stmt);
@@ -29,7 +29,6 @@ mysqli_stmt_close($stmt);
 mysqli_close($conn);
 
 // Mengekstrak video ID dari URL YouTube
-// $video_url = $movie['trailer_url']; // Pastikan kolom 'trailer_url' berisi URL embed YouTube
 $video_url = 'https://www.youtube.com/embed/rWsnLS0Q7G0';
 $parsed_url = parse_url($video_url);
 $video_id = basename($parsed_url['path']);
@@ -43,32 +42,32 @@ $video_id = basename($parsed_url['path']);
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title><?php echo htmlspecialchars($movie['title']); ?> - MOVIES APP</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="./style/detail.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
-<body>
-    <header class="header">
+<body class="bg-dark text-light">
+    <!-- Header -->
+    <header class="bg-black py-3 px-4 d-flex justify-content-between align-items-center">
         <div class="logo">
-            <a href="index.php">
+            <a href="index.php" class="text-white text-decoration-none">
                 <h2>MOVIES APP</h2>
             </a>
         </div>
 
-        <div class="search-bar">
-            <form method="GET" action="">
-                <input name="search" placeholder="Quick search" type="text" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>" />
-                <button type="submit">
-                    <i class="fas fa-search"></i>
-                </button>
-            </form>
-        </div>
+        <form method="GET" action="" class="d-flex bg-secondary rounded p-1">
+            <input name="search" class="form-control bg-transparent text-white border-0" placeholder="Quick search" type="text" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>" />
+            <button type="submit" class="btn btn-dark">
+                <i class="fas fa-search"></i>
+            </button>
+        </form>
     </header>
-    <main>
-        <div class="container">
-            <!-- Menyematkan video YouTube berdasarkan video ID -->
-            <div class="video-container">
-                <iframe width="1280" height="720" src="https://www.youtube.com/embed/<?php echo htmlspecialchars($video_id); ?>" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+    <!-- Main Content -->
+    <main class="container py-4">
+        <!-- Menyematkan video YouTube berdasarkan video ID -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <iframe width="100%" height="500" src="https://www.youtube.com/embed/<?php echo htmlspecialchars($video_id); ?>" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
         </div>
 
@@ -78,9 +77,12 @@ $video_id = basename($parsed_url['path']);
         </div>
     </main>
 
-    <footer class="footer">
+    <!-- Footer -->
+    <footer class="bg-black text-center py-3">
         <p>© <?php echo date("Y"); ?> MOVIES APP. All rights reserved.</p>
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

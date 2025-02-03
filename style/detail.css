@@ -1,4 +1,4 @@
-body {
+/* body {
     margin: 0;
     font-family: 'Roboto', sans-serif;
     background-color: #2b2b2b;
@@ -20,7 +20,6 @@ body {
 
 .logo a:hover {
     color: white;
-    /* Atau warna lain untuk hover */
 }
 
 .search-bar {
@@ -71,12 +70,11 @@ body {
 
 .video-container iframe {
     max-width: 100%;
-    height: 360px; /* Sesuaikan tinggi video */
-    width: 720px;  /* Sesuaikan lebar video */
+    height: 360px;
+    width: 720px;
     border-radius: 5px;
 }
 
-/* Bagian Plot Summary */
 .movie-details {
     margin-top: 20px;
     background-color: #333;
@@ -86,7 +84,7 @@ body {
 
 .movie-details h2 {
     color: wheat;
-    font-weight: bold; /* Membuat teks menjadi tebal */
+    font-weight: bold;
 }
 
 .movie-details p {
@@ -98,4 +96,4 @@ body {
     text-align: center;
     padding: 20px;
     background-color: #1c1c1c;
-}
+} */
