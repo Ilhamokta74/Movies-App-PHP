@@ -42,7 +42,7 @@
     <main>
         <div class="container d-flex justify-content-center align-items-center vh-100">
             <div class="card bg-secondary p-4 shadow-lg" style="width: 400px; background-color: rgba(0, 0, 0, 0.7);">
-                <h3 class="text-center text-white">Register</h3>
+                <h3 class="text-center text-white">Login</h3>
                 <?php
                 if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $username = $_POST['username'];
@@ -76,10 +76,6 @@
                 ?>
                 <form action="" method="POST">
                     <div class="mb-3">
-                        <label for="username" class="form-label text-white">Username</label>
-                        <input type="text" class="form-control" id="username" name="username" placeholder="Input Username Here" required>
-                    </div>
-                    <div class="mb-3">
                         <label for="email" class="form-label text-white">Email</label>
                         <input type="email" class="form-control" id="email" name="email" placeholder="Input Email Here" required>
                     </div>
@@ -92,22 +88,12 @@
                             </button>
                         </div>
                     </div>
-                    <div class="mb-3 position-relative">
-                        <label for="confirmPassword" class="form-label text-white">Confirm Password</label>
-                        <div class="input-group">
-                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Input Confirm Password Here" required>
-                            <button class="btn btn-outline-light" type="button" onclick="togglePassword('confirmPassword', 'togglePasswordIcon2')">
-                                <i id="togglePasswordIcon2" class="fas fa-eye"></i>
-                            </button>
-                        </div>
-                        <div id="confirmPasswordError" class="text-danger" style="display:none;">Passwords do not match!</div>
-                    </div>
 
                     <div class="d-flex justify-content-end">
-                        <p class="text-white">Have Account ? <a href="login.php" class="text-decoration-none text-primary">login</a></p>
+                        <p class="text-white">No Have Account ? <a href="register.php" class="text-decoration-none text-primary">Register</a></p>
                     </div>
 
-                    <button type="submit" class="btn btn-light w-100">Register</button>
+                    <button type="submit" class="btn btn-light w-100">Login</button>
                 </form>
             </div>
         </div>

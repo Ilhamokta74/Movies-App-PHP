@@ -60,6 +60,11 @@ $video_id = basename($parsed_url['path']);
                 <i class="fas fa-search"></i>
             </button>
         </form>
+
+        <div class="d-flex gap-3">
+            <a href="register.php" class="btn btn-outline-light px-3">Register</a>
+            <a href="login.php" class="btn btn-light text-dark px-3">Login</a>
+        </div>
     </header>
 
     <!-- Main Content -->
