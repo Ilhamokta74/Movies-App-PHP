@@ -29,7 +29,7 @@ mysqli_stmt_close($stmt);
 mysqli_close($conn);
 
 // Mengekstrak video ID dari URL YouTube
-$video_url = 'https://www.youtube.com/embed/rWsnLS0Q7G0';
+$video_url = $movie['video_url'];
 $parsed_url = parse_url($video_url);
 $video_id = basename($parsed_url['path']);
 ?>
@@ -78,7 +78,7 @@ $video_id = basename($parsed_url['path']);
 
         <div class="movie-details">
             <h2>Plot Summary</h2>
-            <p>Kaluna, a middle-class worker living with her parents and married siblings, dreams of owning her own house. However, supporting her extended family on a minimal income leaves her feeling out of place at home.</p>
+            <p><?php echo nl2br(htmlspecialchars($movie['summary'])); ?></p>
         </div>
     </main>
 
