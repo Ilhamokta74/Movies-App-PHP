@@ -1,5 +1,46 @@
+<?php
+// Koneksi ke database
+include './connection.php';
+
+$alertMessage = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $confirmPassword = $_POST['confirmPassword'];
+
+    if ($password === $confirmPassword) {
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+        // Cek apakah username atau email sudah ada
+        $checkStmt = $conn->prepare("SELECT id FROM user WHERE username = ? OR email = ?");
+        $checkStmt->bind_param("ss", $username, $email);
+        $checkStmt->execute();
+        $checkStmt->store_result();
+
+        if ($checkStmt->num_rows > 0) {
+            $alertMessage = "<div class='alert alert-danger'>Username atau Email sudah terdaftar!</div>";
+        } else {
+            $stmt = $conn->prepare("INSERT INTO user (username, email, password) VALUES (?, ?, ?)");
+            $stmt->bind_param("sss", $username, $email, $hashedPassword);
+
+            if ($stmt->execute()) {
+                $alertMessage = "<div class='alert alert-success'>Registrasi berhasil! <a href='login.php' class='text-white'>Login</a></div>";
+            } else {
+                $alertMessage = "<div class='alert alert-danger'>Terjadi kesalahan: " . $stmt->error . "</div>";
+            }
+            $stmt->close();
+        }
+        $checkStmt->close();
+    } else {
+        $alertMessage = "<div class='alert alert-danger'>Password tidak cocok!</div>";
+    }
+}
+?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
@@ -18,105 +59,50 @@
 </head>
 
 <body class="text-light">
-    <!-- Header -->
-    <header class="bg-black py-3 px-4 d-flex justify-content-between align-items-center">
-        <div class="logo">
-            <a href="index.php" class="text-white text-decoration-none">
-                <h2>MOVIES APP</h2>
-            </a>
-        </div>
-
-        <form method="GET" action="" class="d-flex bg-secondary rounded p-1">
-            <input name="search" class="form-control bg-transparent text-white border-0" placeholder="Quick search" type="text" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>" />
-            <button type="submit" class="btn btn-dark">
-                <i class="fas fa-search"></i>
-            </button>
-        </form>
-
-        <div class="d-flex gap-3">
-            <a href="register.php" class="btn btn-outline-light px-3">Register</a>
-            <a href="login.php" class="btn btn-light text-dark px-3">Login</a>
-        </div>
-    </header>
-
     <main>
         <div class="container d-flex justify-content-center align-items-center vh-100">
             <div class="card bg-secondary p-4 shadow-lg" style="width: 400px; background-color: rgba(0, 0, 0, 0.7);">
                 <h3 class="text-center text-white">Register</h3>
-                <?php
-                if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                    $username = $_POST['username'];
-                    $email = $_POST['email'];
-                    $password = $_POST['password'];
-                    $confirmPassword = $_POST['confirmPassword'];
+                <?= $alertMessage ?>
 
-                    if ($password === $confirmPassword) {
-                        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-                        $conn = new mysqli("localhost", "root", "", "movies_app");
-                        if ($conn->connect_error) {
-                            die("Connection failed: " . $conn->connect_error);
-                        }
-
-                        $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
-                        $stmt->bind_param("sss", $username, $email, $hashedPassword);
-
-                        if ($stmt->execute()) {
-                            echo "<div class='alert alert-success'>Registration successful!</div>";
-                        } else {
-                            echo "<div class='alert alert-danger'>Error: " . $stmt->error . "</div>";
-                        }
-
-                        $stmt->close();
-                        $conn->close();
-                    } else {
-                        echo "<div class='alert alert-danger'>Passwords do not match!</div>";
-                    }
-                }
-                ?>
                 <form action="" method="POST">
                     <div class="mb-3">
                         <label for="username" class="form-label text-white">Username</label>
-                        <input type="text" class="form-control" id="username" name="username" placeholder="Input Username Here" required>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Masukkan Username" required>
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label text-white">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" placeholder="Input Email Here" required>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Masukkan Email" required>
                     </div>
                     <div class="mb-3 position-relative">
                         <label for="password" class="form-label text-white">Password</label>
                         <div class="input-group">
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Input Password Here" required>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Masukkan Password" required>
                             <button class="btn btn-outline-light" type="button" onclick="togglePassword('password', 'togglePasswordIcon1')">
                                 <i id="togglePasswordIcon1" class="fas fa-eye"></i>
                             </button>
                         </div>
                     </div>
                     <div class="mb-3 position-relative">
-                        <label for="confirmPassword" class="form-label text-white">Confirm Password</label>
+                        <label for="confirmPassword" class="form-label text-white">Konfirmasi Password</label>
                         <div class="input-group">
-                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Input Confirm Password Here" required>
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Ulangi Password" required>
                             <button class="btn btn-outline-light" type="button" onclick="togglePassword('confirmPassword', 'togglePasswordIcon2')">
                                 <i id="togglePasswordIcon2" class="fas fa-eye"></i>
                             </button>
                         </div>
-                        <div id="confirmPasswordError" class="text-danger" style="display:none;">Passwords do not match!</div>
+                        <div id="confirmPasswordError" class="text-danger" style="display:none;">Password tidak cocok!</div>
                     </div>
 
                     <div class="d-flex justify-content-end">
-                        <p class="text-white">Have Account ? <a href="login.php" class="text-decoration-none text-primary">login</a></p>
+                        <p class="text-white">Sudah punya akun? <a href="login.php" class="text-decoration-none text-primary">Login</a></p>
                     </div>
 
-                    <button type="submit" class="btn btn-light w-100">Register</button>
+                    <button type="submit" class="btn btn-light w-100">Daftar</button>
                 </form>
             </div>
         </div>
     </main>
-
-    <!-- Footer -->
-    <footer class="bg-black text-center py-3">
-        <p>© <?php echo date("Y"); ?> MOVIES APP. All rights reserved.</p>
-    </footer>
 
     <script>
         function togglePassword(fieldId, iconId) {
@@ -133,7 +119,7 @@
             }
         }
 
-        // Real-time password match validation
+        // Validasi password real-time
         document.getElementById('confirmPassword').addEventListener('input', function() {
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
