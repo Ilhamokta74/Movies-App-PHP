@@ -1,6 +1,6 @@
 <?php
 session_start();
-require './connection.php';
+include './connection/connection.php';
 
 // Periksa apakah pengguna sudah login
 if (!isset($_SESSION['user_id'])) {

@@ -1,6 +1,6 @@
 <?php
 // Koneksi ke database
-include './connection.php';
+include './connection/connection.php';
 
 $alertMessage = "";
 

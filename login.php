@@ -1,6 +1,6 @@
 <?php
 session_start();
-require './connection.php'; // File konfigurasi database
+include './connection/connection.php';
 
 // Redirect to dashboard if already logged in
 if (isset($_SESSION['user_id'])) {

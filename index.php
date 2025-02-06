@@ -1,6 +1,6 @@
 <?php
 // Menyertakan file koneksi
-include './connection.php';
+include './connection/connection.php';
 
 // Memastikan koneksi ke database berhasil
 if (!$conn) {
@@ -57,7 +57,7 @@ mysqli_close($conn);
 <body class="bg-dark text-light">
     <?php
     // Menampilkan Header
-    include './component/header.php'
+    include './component/header-user.php'
     ?>
 
     <!-- Main Content -->

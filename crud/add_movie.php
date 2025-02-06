@@ -1,5 +1,5 @@
 <?php
-require './connection.php';
+include './connection/connection.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $title = $_POST['title'];

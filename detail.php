@@ -1,6 +1,6 @@
 <?php
 // Koneksi ke database
-include './connection.php';
+include './connection/connection.php';
 
 // Mendapatkan ID film dari URL
 $movie_id = isset($_GET['id']) ? $_GET['id'] : null;
