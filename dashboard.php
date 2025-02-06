@@ -160,7 +160,7 @@ $result = $stmt->get_result();
                         let res = JSON.parse(response);
                         if (res.success) {
                             alert("Film berhasil ditambahkan!");
-                            // location.reload();
+                            location.reload();
                         } else {
                             alert("Gagal menambahkan film!");
                         }
