@@ -35,18 +35,9 @@ $result = $stmt->get_result();
 </head>
 
 <body class="bg-dark text-light">
-    <!-- Header -->
-    <header class="bg-black py-3 px-4 d-flex justify-content-between align-items-center">
-        <div class="logo">
-            <a href="index.php" class="text-white text-decoration-none">
-                <h2>MOVIES APP</h2>
-            </a>
-        </div>
-
-        <div class="d-flex gap-3">
-            <a href="logout.php" class="btn btn-light text-dark px-3">Logout</a>
-        </div>
-    </header>
+    <?php
+    include './component/header-admin.php'
+    ?>
 
     <div class="container mt-5">
         <h2 class="mb-4">Dashboard</h2>
@@ -89,7 +80,7 @@ $result = $stmt->get_result();
                                 <button type="button" class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" data-bs-target="#editMovieModal" data-id="<?php echo $row['id']; ?>" data-title="<?php echo $row['title']; ?>" data-year="<?php echo $row['year']; ?>" data-poster="<?php echo $row['poster_url']; ?>" data-video_url="<?php echo $row['video_url']; ?>" data-summary="<?php echo $row['summary']; ?>">
                                     Edit
                                 </button>
-                                <a href="delete.php?id=<?php echo $row['id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus?');">Delete</a>
+                                <a href="./crud/delete-movies.php?id=<?php echo $row['id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus?');">Delete</a>
                             </td>
                         </tr>
                     <?php endwhile; ?>
@@ -193,7 +184,7 @@ $result = $stmt->get_result();
                 let formData = new FormData(this);
 
                 $.ajax({
-                    url: "add_movie.php",
+                    url: "./crud/add-movies.php",
                     type: "POST",
                     data: formData,
                     contentType: false,
@@ -235,7 +226,7 @@ $result = $stmt->get_result();
                 let formData = new FormData(this);
 
                 $.ajax({
-                    url: "edit_movie.php",
+                    url: "./crud/edit-movie.php",
                     type: "POST",
                     data: formData,
                     contentType: false,
@@ -251,7 +242,7 @@ $result = $stmt->get_result();
                     },
                 });
 
-                const movieId =document.getElementById(`movieId`);
+                const movieId = document.getElementById(`movieId`);
                 console.log(movieId);
             });
         });

@@ -1,6 +1,6 @@
 <?php
 session_start();
-include './connection/connection.php';
+include '../connection/connection.php';
 
 // Periksa apakah pengguna sudah login
 if (!isset($_SESSION['user_id'])) {
@@ -31,11 +31,11 @@ if (isset($_GET['id'])) {
     $deleteStmt->bind_param("i", $movie_id);
     
     if ($deleteStmt->execute()) {
-        echo "<script>alert('Film berhasil dihapus!'); window.location.href='dashboard.php';</script>";
+        echo "<script>alert('Film berhasil dihapus!'); window.location.href='/website-film/dashboard.php';</script>";
     } else {
-        echo "<script>alert('Gagal menghapus film!'); window.location.href='dashboard.php';</script>";
+        echo "<script>alert('Gagal menghapus film!'); window.location.href='/website-film/dashboard.php';</script>";
     }
 } else {
-    echo "<script>alert('ID film tidak ditemukan!'); window.location.href='dashboard.php';</script>";
+    echo "<script>alert('ID film tidak ditemukan!'); window.location.href='/website-film/dashboard.php';</script>";
 }
 ?>
