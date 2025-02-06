@@ -86,7 +86,7 @@ $result = $stmt->get_result();
                             <td><?php echo $row['slug']; ?></td>
                             <td><a href="<?php echo $row['video_url']; ?>" target="_blank" class="text-primary">Watch</a></td>
                             <td>
-                                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editMovieModal" data-id="<?php echo $row['id']; ?>" data-title="<?php echo $row['title']; ?>" data-year="<?php echo $row['year']; ?>" data-poster="<?php echo $row['poster_url']; ?>" data-video_url="<?php echo $row['video_url']; ?>" data-summary="<?php echo $row['summary']; ?>">
+                                <button type="button" class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" data-bs-target="#editMovieModal" data-id="<?php echo $row['id']; ?>" data-title="<?php echo $row['title']; ?>" data-year="<?php echo $row['year']; ?>" data-poster="<?php echo $row['poster_url']; ?>" data-video_url="<?php echo $row['video_url']; ?>" data-summary="<?php echo $row['summary']; ?>">
                                     Edit
                                 </button>
                                 <a href="delete.php?id=<?php echo $row['id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus?');">Delete</a>
@@ -149,7 +149,7 @@ $result = $stmt->get_result();
                 </div>
                 <div class="modal-body">
                     <form id="editMovieForm" action="edit_movie.php" method="POST" enctype="multipart/form-data">
-                        <input type="hidden" id="movieId" name="id" value="48">
+                        <input type="hidden" id="movieId" name="id">
                         <div class="mb-3">
                             <label for="editTitle" class="form-label">Judul</label>
                             <input type="text" class="form-control" id="editTitle" name="title" placeholder="Input Judul Here...." required>
@@ -221,6 +221,7 @@ $result = $stmt->get_result();
                 var summary = button.data('summary');
 
                 var modal = $(this);
+                modal.find('#movieId').val(id);
                 modal.find('#editTitle').val(title);
                 modal.find('#editYear').val(year);
                 modal.find('#editVideoUrl').val(videoUrl);
@@ -249,6 +250,9 @@ $result = $stmt->get_result();
                         }
                     },
                 });
+
+                const movieId =document.getElementById(`movieId`);
+                console.log(movieId);
             });
         });
     </script>
