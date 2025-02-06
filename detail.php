@@ -14,7 +14,7 @@ if (!$movie_id) {
 // Mengambil data film berdasarkan ID menggunakan prepared statement
 $query = "SELECT * FROM movies WHERE slug = ?";
 $stmt = mysqli_prepare($conn, $query);
-mysqli_stmt_bind_param($stmt, "i", $movie_id); // "i" menandakan integer
+mysqli_stmt_bind_param($stmt, "s", $movie_id); // "s" menandakan string
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 
@@ -28,10 +28,17 @@ $movie = mysqli_fetch_assoc($result);
 mysqli_stmt_close($stmt);
 mysqli_close($conn);
 
-// Mengekstrak video ID dari URL YouTube
-$video_url = $movie['video_url'];
-$parsed_url = parse_url($video_url);
-$video_id = basename($parsed_url['path']);
+// Mengekstrak video ID dari URL YouTube jika ada
+$video_url = isset($movie['video_url']) ? $movie['video_url'] : '';
+$video_id = '';
+
+if ($video_url) {
+    $parsed_url = parse_url($video_url);
+    if (isset($parsed_url['path'])) {
+        $video_id = basename($parsed_url['path']);
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -54,13 +61,6 @@ $video_id = basename($parsed_url['path']);
             </a>
         </div>
 
-        <form method="GET" action="" class="d-flex bg-secondary rounded p-1">
-            <input name="search" class="form-control bg-transparent text-white border-0" placeholder="Quick search" type="text" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>" />
-            <button type="submit" class="btn btn-dark">
-                <i class="fas fa-search"></i>
-            </button>
-        </form>
-
         <div class="d-flex gap-3">
             <a href="register.php" class="btn btn-outline-light px-3">Register</a>
             <a href="login.php" class="btn btn-light text-dark px-3">Login</a>
@@ -70,11 +70,15 @@ $video_id = basename($parsed_url['path']);
     <!-- Main Content -->
     <main class="container py-4">
         <!-- Menyematkan video YouTube berdasarkan video ID -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <iframe width="100%" height="500" src="https://www.youtube.com/embed/<?php echo htmlspecialchars($video_id); ?>" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <?php if ($video_id): ?>
+            <div class="row mb-4">
+                <div class="col-12">
+                    <iframe width="100%" height="500" src="https://www.youtube.com/embed/<?php echo htmlspecialchars($video_id); ?>" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
             </div>
-        </div>
+        <?php else: ?>
+            <p class="text-muted">Video tidak tersedia.</p>
+        <?php endif; ?>
 
         <div class="movie-details">
             <h2>Plot Summary</h2>
@@ -82,10 +86,10 @@ $video_id = basename($parsed_url['path']);
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-black text-center py-3">
-        <p>© <?php echo date("Y"); ?> MOVIES APP. All rights reserved.</p>
-    </footer>
+    <?php
+    // Menampilkan Footer
+    include './component/footer.php'
+    ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

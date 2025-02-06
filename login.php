@@ -2,20 +2,28 @@
 session_start();
 require './connection.php'; // File konfigurasi database
 
+// Redirect to dashboard if already logged in
+if (isset($_SESSION['user_id'])) {
+    header("Location: dashboard.php");
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
+    // Prepare SQL query to check if email exists
     $stmt = $conn->prepare("SELECT id, email, password FROM user WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
 
+    // Check if email exists and password is correct
     if ($row = $result->fetch_assoc()) {
         if (password_verify($password, $row['password'])) {
             $_SESSION['user_id'] = $row['id'];
             $_SESSION['email'] = $row['email'];
-            header("Location: dashboard.php"); // Redirect ke halaman dashboard
+            header("Location: dashboard.php"); // Redirect to dashboard
             exit;
         } else {
             $error = "Password salah.";
@@ -49,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body class="bg-dark text-light">
     <div class="container d-flex justify-content-center align-items-center vh-100">
         <div class="card bg-secondary p-4 shadow-lg" style="width: 400px;">
-            <h3 class="text-center">Login</h3>
+            <h3 class="text-center text-white">Login</h3>
             <?php if (isset($error)) {
                 echo "<div class='alert alert-danger'>$error</div>";
             } ?>
@@ -70,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <button type="submit" class="btn btn-light w-100">Login</button>
             </form>
             <div class="text-end mt-3">
-                <p>Belum punya akun? <a href="register.php" class="text-white">Daftar</a></p>
+                <p>Belum punya akun? <a href="register.php" class="text-white text-decoration-none">Daftar</a></p>
             </div>
         </div>
     </div>

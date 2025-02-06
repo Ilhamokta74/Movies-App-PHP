@@ -5,36 +5,43 @@ include './connection.php';
 $alertMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST['username'];
-    $email = $_POST['email'];
+    // Ambil data dari form dan sanitasi input
+    $username = htmlspecialchars(trim($_POST['username']));
+    $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
     $password = $_POST['password'];
     $confirmPassword = $_POST['confirmPassword'];
 
-    if ($password === $confirmPassword) {
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-        // Cek apakah username atau email sudah ada
-        $checkStmt = $conn->prepare("SELECT id FROM user WHERE username = ? OR email = ?");
-        $checkStmt->bind_param("ss", $username, $email);
-        $checkStmt->execute();
-        $checkStmt->store_result();
-
-        if ($checkStmt->num_rows > 0) {
-            $alertMessage = "<div class='alert alert-danger'>Username atau Email sudah terdaftar!</div>";
-        } else {
-            $stmt = $conn->prepare("INSERT INTO user (username, email, password) VALUES (?, ?, ?)");
-            $stmt->bind_param("sss", $username, $email, $hashedPassword);
-
-            if ($stmt->execute()) {
-                $alertMessage = "<div class='alert alert-success'>Registrasi berhasil! <a href='login.php' class='text-white'>Login</a></div>";
-            } else {
-                $alertMessage = "<div class='alert alert-danger'>Terjadi kesalahan: " . $stmt->error . "</div>";
-            }
-            $stmt->close();
-        }
-        $checkStmt->close();
+    // Validasi email
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $alertMessage = "<div class='alert alert-danger'>Email tidak valid!</div>";
     } else {
-        $alertMessage = "<div class='alert alert-danger'>Password tidak cocok!</div>";
+        if ($password === $confirmPassword) {
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+            // Cek apakah username atau email sudah ada
+            $checkStmt = $conn->prepare("SELECT id FROM user WHERE username = ? OR email = ?");
+            $checkStmt->bind_param("ss", $username, $email);
+            $checkStmt->execute();
+            $checkStmt->store_result();
+
+            if ($checkStmt->num_rows > 0) {
+                $alertMessage = "<div class='alert alert-danger'>Username atau Email sudah terdaftar!</div>";
+            } else {
+                // Insert data ke database
+                $stmt = $conn->prepare("INSERT INTO user (username, email, password) VALUES (?, ?, ?)");
+                $stmt->bind_param("sss", $username, $email, $hashedPassword);
+
+                if ($stmt->execute()) {
+                    $alertMessage = "<div class='alert alert-success'>Registrasi berhasil!";
+                } else {
+                    $alertMessage = "<div class='alert alert-danger'>Terjadi kesalahan: " . $stmt->error . "</div>";
+                }
+                $stmt->close();
+            }
+            $checkStmt->close();
+        } else {
+            $alertMessage = "<div class='alert alert-danger'>Password tidak cocok!</div>";
+        }
     }
 }
 ?>

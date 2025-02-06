@@ -2,21 +2,33 @@
 // Menyertakan file koneksi
 include './connection.php';
 
+// Memastikan koneksi ke database berhasil
+if (!$conn) {
+    die("Koneksi gagal: " . mysqli_connect_error());
+}
+
 // Mendapatkan kata kunci pencarian jika ada
 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
 
 // Membuat query berdasarkan apakah ada pencarian
 $query = "SELECT * FROM movies";
-
 if ($searchTerm) {
-    $searchTerm = mysqli_real_escape_string($conn, $searchTerm);
-    $query .= " WHERE title LIKE '%" . $searchTerm . "%'"; // LIKE untuk pencarian case-insensitive di MySQL
+    $searchTerm = '%' . mysqli_real_escape_string($conn, $searchTerm) . '%';
+    $query .= " WHERE title LIKE ?"; // Menggunakan placeholder untuk prepared statement
 }
 
 $query .= " ORDER BY year DESC";
 
+// Menyiapkan query dan mengikat parameter
+$stmt = mysqli_prepare($conn, $query);
+
+if ($searchTerm) {
+    mysqli_stmt_bind_param($stmt, 's', $searchTerm); // Mengikat parameter pencarian
+}
+
 // Menjalankan query
-$result = mysqli_query($conn, $query);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
 
 if (!$result) {
     die("Query gagal: " . mysqli_error($conn));
@@ -43,26 +55,10 @@ mysqli_close($conn);
 </head>
 
 <body class="bg-dark text-light">
-    <!-- Header -->
-    <header class="bg-black py-3 px-4 d-flex justify-content-between align-items-center">
-        <div class="logo">
-            <a href="index.php" class="text-white text-decoration-none">
-                <h2>MOVIES APP</h2>
-            </a>
-        </div>
-
-        <form method="GET" action="" class="d-flex bg-secondary rounded p-1">
-            <input name="search" class="form-control bg-transparent text-white border-0" placeholder="Quick search" type="text" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>" />
-            <button type="submit" class="btn btn-dark">
-                <i class="fas fa-search"></i>
-            </button>
-        </form>
-
-        <div class="d-flex gap-3">
-            <a href="register.php" class="btn btn-outline-light px-3">Register</a>
-            <a href="login.php" class="btn btn-light text-dark px-3">Login</a>
-        </div>
-    </header>
+    <?php
+    // Menampilkan Header
+    include './component/header.php'
+    ?>
 
     <!-- Main Content -->
     <main class="container text-center py-4">
@@ -74,7 +70,7 @@ mysqli_close($conn);
                 <?php foreach ($movies as $movie): ?>
                     <div class="col-md-3 col-sm-6 my-3">
                         <div class="card bg-secondary text-white shadow-lg h-100">
-                            <a href="detail.php?id=<?php echo $movie['slug']; ?>" class="text-decoration-none text-white">
+                            <a href="detail.php?id=<?php echo htmlspecialchars($movie['slug']); ?>" class="text-decoration-none text-white">
                                 <img alt="<?php echo htmlspecialchars($movie['title']); ?>" class="card-img-top img-fluid" src="./public/image/<?php echo htmlspecialchars($movie['poster_url']); ?>" />
                                 <div class="card-body d-flex flex-column">
                                     <p class="card-title fw-bold mb-1 text-center"><?php echo htmlspecialchars($movie['title']); ?></p>
@@ -88,13 +84,12 @@ mysqli_close($conn);
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-black text-center py-3">
-        <p>© <?php echo date("Y"); ?> MOVIES APP. All rights reserved.</p>
-    </footer>
+    <?php
+    // Menampilkan Footer
+    include './component/footer.php'
+    ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 
 </html>
