@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt->bind_param("sss", $username, $email, $hashedPassword);
 
                 if ($stmt->execute()) {
-                    $alertMessage = "<div class='alert alert-success'>Registrasi berhasil!";
+                    $alertMessage = "<div class='alert alert-success'>Registrasi berhasil!</div>";
                 } else {
                     $alertMessage = "<div class='alert alert-danger'>Terjadi kesalahan: " . $stmt->error . "</div>";
                 }

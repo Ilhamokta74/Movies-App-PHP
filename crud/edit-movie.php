@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $poster_url = "";
     if (isset($_FILES['poster']) && $_FILES['poster']['error'] == 0) {
         $poster_name = time() . "_" . basename($_FILES['poster']['name']);
-        $target_dir = "./public/image/";
+        $target_dir = "../public/image/";
         $target_file = $target_dir . $poster_name;
 
         if (move_uploaded_file($_FILES['poster']['tmp_name'], $target_file)) {
